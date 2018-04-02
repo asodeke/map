@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/Field1_2.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[50.3988884411,-104.695310244],[50.4294731984,-104.627221096]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var bounds_group = new L.featureGroup([]);
+        var basemap0 = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 28
+        });
+        basemap0.addTo(map);
+        function setBounds() {
+        }
+        var img_CropHealth_0 = 'data/CropHealth_0.png';
+        var img_bounds_CropHealth_0 = [[50.4113836068,-104.675382306],[50.4186803434,-104.663920164]];
+        var overlay_CropHealth_0 = new L.imageOverlay(img_CropHealth_0, img_bounds_CropHealth_0);
+        bounds_group.addLayer(overlay_CropHealth_0);
+        map.addLayer(overlay_CropHealth_0);
+        var img_NDVI_1 = 'data/NDVI_1.png';
+        var img_bounds_NDVI_1 = [[50.4111609901,-104.675383827],[50.4186803434,-104.663920164]];
+        var overlay_NDVI_1 = new L.imageOverlay(img_NDVI_1, img_bounds_NDVI_1);
+        bounds_group.addLayer(overlay_NDVI_1);
+        map.addLayer(overlay_NDVI_1);
+        function pop_Field1_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? Autolinker.link(String(feature.properties['id'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Area'] !== null ? Autolinker.link(String(feature.properties['Area'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Field1_2_0() {
+            return {
+                pane: 'pane_Field1_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 4.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(157,218,0,0.0)',
+            }
+        }
+        map.createPane('pane_Field1_2');
+        map.getPane('pane_Field1_2').style.zIndex = 402;
+        map.getPane('pane_Field1_2').style['mix-blend-mode'] = 'normal';
+        var layer_Field1_2 = new L.geoJson(json_Field1_2, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Field1_2',
+            onEachFeature: pop_Field1_2,
+            style: style_Field1_2_0,
+        });
+        bounds_group.addLayer(layer_Field1_2);
+        map.addLayer(layer_Field1_2);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/Field1_2.png" /> Field1': layer_Field1_2,"NDVI": overlay_NDVI_1,"Crop Health": overlay_CropHealth_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        </script>
+    </body>
+</html>
